@@ -1,0 +1,10 @@
+name: MayorElection
+version: 1.0
+main: me.arcx.mayor.MayorElection
+api-version: 1.8.8
+commands:
+  mayorelection:
+    description: Opens the election GUI or reloads config
+permissions:
+  mayorelection.admin:
+    default: op
