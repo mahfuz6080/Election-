@@ -2,16 +2,17 @@ name: Java CI with Maven
 
 on:
   push:
-    tags:
-      - 'v*'  # Only triggers when pushing tags like v1.0
-  workflow_dispatch:
+    branches:
+      - main  # Triggers on every push to main
+  workflow_dispatch:  # Optional manual trigger
 
 permissions:
-  contents: write  # Needed to create releases
+  contents: write  # Needed to upload to Releases
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,9 +26,12 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Upload JAR to GitHub Releases
+      - name: Create GitHub Release and Upload JAR
         uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'  # Only release from main
         with:
+          tag_name: main-${{ github.run_number }}
+          name: Development Build ${{ github.run_number }}
           files: target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
